@@ -69,6 +69,54 @@ class MyPromise {
   catch = (reject) => {
     return this.then(null, reject);
   };
+  finally = (cb) => {
+    return this.then(
+      (value) => MyPromise.resolve(cb()).then(() => value),
+      (error) => MyPromise.resolve(cb()).then(() => error)
+    );
+  };
+  static resolve(value) {
+    return value instanceof MyPromise
+      ? value
+      : new MyPromise((resolve) => resolve(value));
+  }
+  static all(promiseArr) {
+    let result = [];
+    let count = 0;
+    return new MyPromise((resolve, reject) => {
+      if (!promiseArr.length) return resolve(result);
+      for (let i = 0; i < promiseArr.length; i++) {
+        const p = promiseArr[i];
+        MyPromise.resolve(p).then(
+          (value) => {
+            count++;
+            result[i] = value;
+            if (count === promiseArr.length) {
+              resolve(result);
+            }
+          },
+          (error) => {
+            reject(error);
+          }
+        );
+      }
+    });
+  }
+  static race(promiseArr) {
+    return new MyPromise((resolve, reject) => {
+      for (let i = 0; i < promiseArr.length; i++) {
+        const p = promiseArr[i];
+        MyPromise.resolve(p).then(
+          (value) => {
+            resolve(value);
+          },
+          (error) => {
+            reject(error);
+          }
+        );
+      }
+    });
+  }
 }
 
 const State = {
