@@ -4,7 +4,7 @@
   "main": "dist/index.js",
   "scripts": {
     "start": "ts-node src/index.ts",
-    "lint": "prettier --write src/**/*.ts test/**/*.ts",
+    "lint": "prettier --write src/**/*.ts test/**/*.ts src/**/*.js test/**/*.js",
     "test": "jest"
   },
   "repository": "https://github.com/SASUKE40/node-playground.git",
